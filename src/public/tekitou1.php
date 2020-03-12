@@ -27,7 +27,24 @@
     $hash = ['a'=>1, 'b'=>2, 'c'=>3];
     print_r($hash);
     print('<br>');
-    print("今日のラッキーナンバーは{$hash['b']}ですよ<br>")
+    print("今日のラッキーナンバーは{$hash['b']}ですよ<br>");
+
+    // 「独習PHP第3版」練習問題2.5.2より
+    $data = [1 => 2, 3 => 5, 5 => 10, 8 => 12];
+    $data[] = 20;
+    print("{$data[9]}<br>");
+
+    // 数値変換
+    $v = var_dump((int) 10.5);
+    print("{$v}<br>");
+    $v = var_dump(bindec('0b1101'));
+    print("${v}<br>");
+
+    // 浮動小数点計算
+    $f = floor((0.1 + 0.7) * 10.0);
+    print("あれ、結果が{$f}になってるぞ<br>");
+    $f = floor(bcadd(0.1, 0.7, 1) * 10.0);
+    print("よし、bcaddで結果が{$f}になった<br>");
     ?>
 </body>
 </html>
