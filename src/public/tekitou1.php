@@ -7,7 +7,11 @@
     /**
      * 色々試してみる
      * PHP Version >= 7.0
-     */ 
+     */
+    $_dir_path = $_GET['path'];
+
+    print("<p><a href=\"http://localhost?path={$_dir_path}\">戻る</a></p>");
+
     $x = 'title';
     $title = '世界';
     print('[可変変数の確認]<br>');
@@ -45,6 +49,8 @@
     print("あれ、結果が{$f}になってるぞ<br>");
     $f = floor(bcadd(0.1, 0.7, 1) * 10.0);
     print("よし、bcaddで結果が{$f}になった<br>");
+
+    print("<p><a href=\"http://localhost?path={$_dir_path}\">戻る</a></p>");
     ?>
 </body>
 </html>
