@@ -4,6 +4,7 @@
     </head>
     <body>
         <?php
+        // この部分はDockerコンテナ内の話なのでバレても特に問題ないっす
         const INITIAL_PATH = '/var/www/public';
 
         function getPath($pathname) {
