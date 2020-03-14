@@ -8,9 +8,12 @@
      * 色々試してみる
      * PHP Version >= 7.0
      */
-    $_dir_path = $_GET['path'];
+    require_once 'helper.php';
 
-    print("<p><a href=\"http://localhost?path={$_dir_path}\">戻る</a></p>");
+    $_params = getParams($_GET);
+    $return_link = createLink('', '', $_params, '戻る');
+
+    print($return_link);
 
     $x = 'title';
     $title = '世界';
@@ -50,7 +53,7 @@
     $f = floor(bcadd(0.1, 0.7, 1) * 10.0);
     print("よし、bcaddで結果が{$f}になった<br>");
 
-    print("<p><a href=\"http://localhost?path={$_dir_path}\">戻る</a></p>");
+    print($return_link);
     ?>
 </body>
 </html>

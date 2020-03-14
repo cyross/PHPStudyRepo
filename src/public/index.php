@@ -4,13 +4,6 @@
     </head>
     <body>
         <?php
-        // この部分はDockerコンテナ内の話なのでバレても特に問題ないっす
-        const INITIAL_PATH = '/var/www/public';
-
-        function getPath($pathname) {
-            $path = realpath($pathname);
-            return dirname($path);
-        }
         /**
          * とりあえず最初に実行するファイル
          * 
@@ -22,25 +15,49 @@
          * @license  MIT License
          * @link     https://cyross.com
          */
-        $param_path = $_GET['path'];
-        if ($param_path == null) {
-            $param_path = INITIAL_PATH;
+
+        require_once 'helper.php';
+
+        function isExecutableFile(string $filename): bool
+        {
+            return !isHelperFile($filename) && !isIndexFile($filename);
         }
+
+        $params = getParams($_GET);
+        $param_path = $params['path'];
+        $param_url_path = $params['url_path'];
+
         print("<h1>PHPプログラムランチャー</h1>");
-        print("<p><span class=\"\">CURRENT DIR={$param_path}</span></p>");
+
+        print("<h2><span>現在のディレクトリ:</span>{$param_path}</h2>");
+
         $dirs = new DirectoryIterator($param_path);
         foreach ($dirs as $path) {
-            if ($path == '..' && $param_path != INITIAL_PATH) {
-                $next_path = getPath($param_path . $path);
+            if ($path == '..' && $param_url_path != '/') {
+                $next_path = getPath("{$param_path}");
+                $url_pathes = explode('/', $param_url_path);
+                if (count($url_pathes) != 0) {
+                    array_pop($url_pathes);
+                }
+                $next_url_path = join('/', $url_pathes);
+                if ($next_url_path == '') {
+                    $next_url_path = '/';
+                }
+                $params = ['path' => $next_path, 'url_path' => $next_url_path];
+                print(createLink('[D]', '', $params, '..'));
             } elseif ($path->isDot()) {
                 continue;
             } elseif ($path->isDir()) {
                 $dirname = $path->getFilename();
-                print("<p><span class=\"\">[D]</span><a href=\"http://localhost?path={$dirname}\">{$dirname}</a></p>");
-            } elseif ($path->isFile()) {
+                $next_path = "{$param_path}/${dirname}";
+                $next_url_path = concatPath($param_url_path, $dirname);
+                $params = ['path' => $next_path, 'url_path' => $next_url_path];
+                print(createLink('[D]', '', $params, $dirname));
+            } elseif ($path->isFile() && isExecutableFile($path->getFilename())) {
                 $filename = $path->getFilename();
-                $dirname = getPath($filename);
-                print("<p><span class=\"\">[F]</span><a href=\"http://localhost/${filename}?path={$dirname}\">{$filename}</a></p>");
+                $params = ['path' => $param_path, 'url_path' => $param_url_path];
+                $path = concatPath($param_url_path, $filename);
+                print(createLink('[F]', "{$path}", $params, $filename));
             }
         }
         ?>
