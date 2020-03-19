@@ -89,4 +89,10 @@ function printBR(...$strs)
     print("<p><strong>{$str}</strong></p>");
     return null;
 }
+
+function printTAG($str, $tag)
+{
+    print("<{$tag}>{$str}</{$tag}>");
+    return null;
+}
 ?>
