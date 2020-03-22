@@ -18,6 +18,13 @@
 
         require_once 'helper.php';
 
+        /**
+         * 実行可能なファイル名かどうかを返す
+         * 
+         * @param string $filename 確認するファイル名
+         * 
+         * @return bool 実行可能なときは true
+         */
         function isExecutableFile(string $filename): bool
         {
             return !isHelperFile($filename) && !isIndexFile($filename);

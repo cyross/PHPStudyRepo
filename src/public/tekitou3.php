@@ -8,27 +8,16 @@
     <?php
     /**
      * 色々試してみる
+     * 
      * PHP Version >= 7.0
+     * 
+     * @category Example
+     * @package  Cyross
+     * @author   Cyross <cyross@sample.com>
+     * @license  MIT License
+     * @link     https://cyross.com
      */
     require_once 'helper.php';
-
-    function printVALUE($v1, $v2, $v3)
-    {
-        printBR("({$v1},{$v2})={$v3}");
-        return null;
-    }
-
-    function printH1($str)
-    {
-        printTAG($str, 'H1');
-        return null;
-    }
-
-    function printH2($str)
-    {
-        printTAG($str, 'H2');
-        return null;
-    }
 
     $_params = getParams($_GET);
     $return_link = createLink('', '', $_params, '戻る');

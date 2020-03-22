@@ -8,27 +8,16 @@
     <?php
     /**
      * 色々試してみる
+     * 
      * PHP Version >= 7.0
+     * 
+     * @category Example
+     * @package  Cyross
+     * @author   Cyross <cyross@sample.com>
+     * @license  MIT License
+     * @link     https://cyross.com
      */
     require_once 'helper.php';
-
-    function printVALUE($v1, $v2, $v3)
-    {
-        printBR("({$v1},{$v2})={$v3}");
-        return null;
-    }
-
-    function printH1($str)
-    {
-        printTAG($str, 'H1');
-        return null;
-    }
-
-    function printH2($str)
-    {
-        printTAG($str, 'H2');
-        return null;
-    }
 
     $_params = getParams($_GET);
     $return_link = createLink('', '', $_params, '戻る');
@@ -37,16 +26,40 @@
 
     printH1('可変関数');
 
+    /**
+     * 単に足すだけ
+     * 
+     * @param int $v1 値1
+     * @param int $v2 値2
+     * 
+     * @return int 結果
+     */
     function op1($v1, $v2): int
     {
         return $v1 + $v2;
     }
 
+    /**
+     * 単に引くだけ
+     * 
+     * @param int $v1 値1
+     * @param int $v2 値2
+     * 
+     * @return int 結果
+     */
     function op2($v1, $v2): int
     {
         return $v1 - $v2;
     }
 
+    /**
+     * 単にかけるだけ
+     * 
+     * @param int $v1 値1
+     * @param int $v2 値2
+     * 
+     * @return int 結果
+     */
     function op3($v1, $v2): int
     {
         return $v1 * $v2;
@@ -58,17 +71,26 @@
 
     printH1('無名関数(クロージャ)');
 
-    function opCl1(int $i, callable $v2) {
+    /**
+     * 内部で関数実行して結果を表示
+     * 
+     * @param int      $i  値1
+     * @param callable $v2 値2
+     * 
+     * @return null 
+     */
+    function opCl1(int $i, callable $v2)
+    {
         for ($j = 3; $j > 0; $j--) {
             printBR($v2($i, $j));
         }
     }
 
-    opCl1 (100, 
-        function(int $a, int $b): int {
-            return $a * $b;
-        }
-    );
+    $func = function (int $a, int $b): int {
+        return $a * $b;
+    };
+
+    opCl1(100, $func);
 
     printH2('useを使用');
 
@@ -96,6 +118,11 @@
 
     printH1('ジェネレータ');
 
+    /**
+     * 1,2,3...と返すジェネレータ
+     * 
+     * @return int 1を起点とした値
+     */
     function gen1()
     {
         $v = 1;
@@ -114,7 +141,6 @@
             }
         }
     }
-
 
     print($return_link);
     ?>
