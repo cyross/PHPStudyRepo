@@ -200,4 +200,17 @@ function printH2($str)
     printTAG($str, 'H2');
     return null;
 }
+
+/**
+ * クロスサイトスクリプティング対策
+ * 
+ * @param string $body    本文
+ * @param string $charset 文字コード
+ * 
+ * @return string エスケープされた文字列
+ */
+function e(string $body, string $charset = 'UTF-8'): string
+{
+    return htmlspecialchars($body, ENT_QUOTES | ENT_HTML5, $charset);
+}
 ?>

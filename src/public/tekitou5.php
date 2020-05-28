@@ -24,123 +24,64 @@
 
     print($return_link);
 
-    printH1('可変関数');
+    printH1('MySQLでデータベース操作');
 
     /**
-     * 単に足すだけ
+     * DBに接続
      * 
-     * @param int $v1 値1
-     * @param int $v2 値2
+     * @param string $dbname   データベース名
+     * @param string $hostname ホスト名
+     * @param string $username ユーザ名
+     * @param string $password パスワード
+     * @param string $charset  文字コード
      * 
-     * @return int 結果
+     * @return PDO 接続したDBの情報、失敗したときはnull
      */
-    function op1($v1, $v2): int
+    function connectDB(string $dbname, string $hostname, string $username, string $password, string $charset = 'utf8'): PDO
     {
-        return $v1 + $v2;
-    }
-
-    /**
-     * 単に引くだけ
-     * 
-     * @param int $v1 値1
-     * @param int $v2 値2
-     * 
-     * @return int 結果
-     */
-    function op2($v1, $v2): int
-    {
-        return $v1 - $v2;
-    }
-
-    /**
-     * 単にかけるだけ
-     * 
-     * @param int $v1 値1
-     * @param int $v2 値2
-     * 
-     * @return int 結果
-     */
-    function op3($v1, $v2): int
-    {
-        return $v1 * $v2;
-    }
-
-    for ($i = 1; $i < 4; $i++) {
-        printBR(('op' . $i)(5, 2)); // 式でも可能
-    }
-
-    printH1('無名関数(クロージャ)');
-
-    /**
-     * 内部で関数実行して結果を表示
-     * 
-     * @param int      $i  値1
-     * @param callable $v2 値2
-     * 
-     * @return null 
-     */
-    function opCl1(int $i, callable $v2)
-    {
-        for ($j = 3; $j > 0; $j--) {
-            printBR($v2($i, $j));
+        $dsn = "mysql:dbname={$dbname}; host={$hostname}; charset={$charset}";
+        try {
+            $db = new PDO($dsn, $username, $password);
+        } catch (PDOException $e) {
+            print("Error! : {$e->getMessage()}");
+            return null;
         }
+        return $db;
     }
 
-    $func = function (int $a, int $b): int {
-        return $a * $b;
-    };
+    $db = connectDB('tekitou5', 'mysql', 'root', 'root');
 
-    opCl1(100, $func);
+    $select = $db->prepare('select ch.name as chname, al.name as alname, cl.name as clname, ch.hp, ch.mp from chara as ch, alignment as al, class as cl where ch.alignment_id=al.id and ch.class_id=cl.id');
+    $select->execute();
 
-    printH2('useを使用');
-
-    $x = 200;
-
-    opCl1(
-        100,
-        function (int $a, int $b) use ($x): int {
-            return $x + $a * $b;
-        }
-    );
-
-    printH2('useで参照渡し使用');
-
-    $x = 200;
-    $r = 0;
-
-    opCl1(
-        100,
-        function (int $a, int $b) use ($x, &$r): int {
-            $r += $a * $b;
-            return $x + $r;
-        }
-    );
-
-    printH1('ジェネレータ');
-
-    /**
-     * 1,2,3...と返すジェネレータ
-     * 
-     * @return int 1を起点とした値
-     */
-    function gen1()
-    {
-        $v = 1;
-        while (true) {
-            yield $v;
-            $v++;
-        }
-        return 0; // PHP7以降でできるようになった
-    }
-
-    foreach (['a', 'b', 'c', 'd', 'e'] as $c) {
-        foreach (gen1() as $value) {
-            printBR($c . $value);
-            if ($value % 5 == 0) {
-                break;
+    if ($select->rowCount() == 0) {
+        printBR("該当する行はありませんでした");
+    } else {
+    ?>
+        <table border=1>
+            <tr>
+                <th>名前</th><th>職業</th><th>属性</th><th>HP</th><th>MP</th>
+            </tr>
+            <?php
+            $select->setFetchMode(PDO::FETCH_ASSOC);
+            foreach ($select as $row) {
+            ?>
+                <tr>
+                    <td> <?php echo e($row['chname']) ?></td>
+                    <td> <?php echo e($row['clname']) ?></td>
+                    <td> <?php echo e($row['alname']) ?></td>
+                    <td> <?php echo e($row['hp']) ?></td>
+                    <td> <?php echo e($row['mp']) ?></td>
+                </tr>
+            <?php
             }
-        }
+            ?>
+        </table>
+    <?php
     }
+
+    // DBの切断(おまじない程度)
+    $db = null;
 
     print($return_link);
     ?>
