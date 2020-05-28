@@ -5,14 +5,8 @@
 ### リポジトリをクローンしてカレントディレクトリを移動
 
 ```bash
-git clone https://github.com/cyross/PHPStudyRepo.git PHPStudyRepo
+git clone --recursive https://github.com/cyross/PHPStudyRepo.git PHPStudyRepo
 cd PHPStudyRepo
-```
-
-### Laradockを入れる
-
-```bash
-git submodule add https://github.com/Laradock/laradock.git
 ```
 
 ### `.env`ファイルを組み込む
